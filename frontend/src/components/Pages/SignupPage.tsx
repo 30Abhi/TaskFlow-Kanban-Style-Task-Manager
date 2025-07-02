@@ -1,24 +1,31 @@
 import { axiosInstance } from "@/utils/axiosINstance";
 import { Button, Form, Input } from "antd"
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 
-const handleOnSubmit=async(values:any)=>{
+const handleOnSubmit=async(values:any,navigate:any)=>{
     
     const userdata={
         email:values.email,
         username:values.username,
         password:values.password,
     }
+    try {
+      const res=await axiosInstance.post("/user/signup",userdata);
+      console.log("user signup success ");
+      navigate("/task");
 
-    await axiosInstance.post("/user/signup",userdata);
+    } catch (error) {
+      console.error("Error during signup:", error);
+    }
+    
 
-    console.log("user signup success ");
+    
 
 }
 
 const SignUpPage: React.FC = () => {
    
-   
+    const navigate = useNavigate();
 
   return (
     <>
@@ -29,7 +36,7 @@ const SignUpPage: React.FC = () => {
         
         style={{ maxWidth: 600 }}
         onFinish={
-          (values)=>handleOnSubmit(values)
+          (values)=>handleOnSubmit(values,navigate)
         }
 
 
